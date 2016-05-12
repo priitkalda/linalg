@@ -1,3 +1,4 @@
+// see fail on mõeldud php-ga skripti sisse trükkimiseks, mitte html päisesse panekuks
 var e = [];
 for(var i = 0; i<a[0].length; i++){
 	e.push([]);
@@ -12,5 +13,5 @@ for(var i = 0; i<a[0].length; i++){
 }
 e = $M(e);
 a[0] = $M(a[0]);
-var alg = a[0].dup();
+//var alg = a[0].dup();
 a[0] = a[0].augment(e).elements;

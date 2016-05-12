@@ -2,8 +2,7 @@
 <?php
 $conn;
 
-function ühenda()
-{
+function ühenda(){
 	global $conn;
 	$servername = "localhost";
 	$username = "root";
@@ -54,7 +53,7 @@ function kontrolli_vastust($vastus, $id){
 	else if ($result[0]['vastus']  == null){
 		echo 'N';
 	}
-	else if ($result[0]['tüüp']  == 1 or $result[0]['tüüp']  == 4){
+	else if ($result[0]['tüüp']  == 1 or $result[0]['tüüp']  == 4 ){
 		// astak või determinant
 		if ($result[0]['vastus']  == $vastus){
 			echo '1';
@@ -122,8 +121,7 @@ function renderda_ülesande_link($sql_rida){
 }
 		
 		
-function ülesanne($id)
-{
+function ülesanne($id){
 	ühenda();
 	global $conn;
 	$stmt = $conn->prepare("SELECT sisu, tüüp, sammud FROM ülesanne WHERE id=" . $id . ";");
@@ -135,8 +133,7 @@ function ülesanne($id)
 
 };
 
-function kõik_ülesanded()
-{
+function kõik_ülesanded(){
 	ühenda();
 	global $conn;
 	$stmt = $conn->prepare("SELECT * FROM tüüp");
@@ -145,8 +142,8 @@ function kõik_ülesanded()
 	$result = $stmt->fetchAll();
 	
 	foreach($result as $r) {
-		echo '<b>' . $r['kirjeldus'] . '</b></br><div class="kastide_organisaator_avaleht">';
-		$stmt = $conn->prepare("SELECT id, sisu, allikas FROM ülesanne WHERE tüüp=" . $r['id']);
+		echo '<b>' . $r['kirjeldus'] . '</b><br><div class="kastide_organisaator_avaleht">';
+		$stmt = $conn->prepare("SELECT id, sisu, allikas FROM ülesanne WHERE tüüp=" . $r['id']." and peida_kataloogist!=1");
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
 		$result = $stmt->fetchAll();
@@ -160,17 +157,16 @@ function kõik_ülesanded()
 			}
 		}
 
-			echo '</div></br>';
+			echo '</div><br>';
 		echo '<a href="index.php?tüüp=' . $r['id'] . '&lk=0">Rohkem ülesandeid</a>';
-			echo '</br></br>';
+			echo '<br><br>';
 	}
 
 	$conn = null;
 };
 
 
-function viited($vajalikud)
-{	
+function viited($vajalikud){	
 	if (count($vajalikud) >0 ){
 		ühenda();
 		global $conn;	
@@ -182,9 +178,9 @@ function viited($vajalikud)
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
 		$result = $stmt->fetchAll();
 		
-			echo '</br><div class="kastide_organisaator_avaleht viited"><b>Viited</b></br>';
+			echo '<br><div class="kastide_organisaator_avaleht viited"><b>Viited</b><br>';
 			foreach($result as $r) {
-				echo '<a name="'.$r['Id'].'">'.$r['Id'].'. '.$r['pealkiri'].'</br></a>';
+				echo '<a name="'.$r['Id'].'">'.$r['Id'].'. '.$r['pealkiri'].'<br></a>';
 
 			}
 			echo '</div>';
@@ -194,8 +190,7 @@ function viited($vajalikud)
 };
 
 
-function ülesanded($tp, $lk)
-{
+function ülesanded($tp, $lk){
 	ühenda();
 	global $conn;
 	$stmt = $conn->prepare("SELECT * FROM tüüp WHERE id=" . $tp);
@@ -203,12 +198,12 @@ function ülesanded($tp, $lk)
 	$stmt->setFetchMode(PDO::FETCH_ASSOC);
 	$r = $stmt->fetchAll();
 	
-	$stmt = $conn->prepare("SELECT id,sisu,allikas FROM ülesanne WHERE tüüp=" . $tp);
+	$stmt = $conn->prepare("SELECT id,sisu,allikas FROM ülesanne WHERE tüüp=" . $tp." and peida_kataloogist!=1");
 	$stmt->execute();
 	$stmt->setFetchMode(PDO::FETCH_ASSOC);
 	$result = $stmt->fetchAll();
 	
-	echo '<b>' . $r[0]['kirjeldus'] . '</b></br><div class="kastide_organisaator_avaleht">';
+	echo '<b>' . $r[0]['kirjeldus'] . '</b><br><div class="kastide_organisaator_avaleht">';
 
 	$loendur = 0;
 	
@@ -217,21 +212,21 @@ function ülesanded($tp, $lk)
 			$loendur++;
 			renderda_ülesande_link($result[$i]);
 			//echo '<a href="lahenda.php?ülesanne=' . $result[$i]['id'] . '">ülesanne ' . $result[$i]['id'] . '</a>';
-			//echo '</br>'.nl2br ( $result[$i]['sisu']).'</br></br>';
+			//echo '<br>'.nl2br ( $result[$i]['sisu']).'<br><br>';
 		}
 	}
 	echo '</div>';
 	
 	if ($lk > 0) {
 			$lkMiinusYks = $lk - 1;
-			echo '</br><a href="index.php?tüüp=' . $tp . '&lk=' . $lkMiinusYks . '">Eelmised ülesanded</a></br></br>';
+			echo '<br><a href="index.php?tüüp=' . $tp . '&lk=' . $lkMiinusYks . '">Eelmised ülesanded</a><br><br>';
 		}
 	
 	
 	if ($loendur >= 10) {		
 
 		$lkPlussYks = $lk + 1;
-		echo '</br><a href="index.php?tüüp=' . $tp . '&lk=' . $lkPlussYks . '">Rohkem ülesandeid</a></br></br>';
+		echo '<br><a href="index.php?tüüp=' . $tp . '&lk=' . $lkPlussYks . '">Rohkem ülesandeid</a><br><br>';
 		
 		
 	}

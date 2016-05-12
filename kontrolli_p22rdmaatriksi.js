@@ -1,5 +1,6 @@
-
-
+// see fail on mõeldud php-ga skripti sisse trükkimiseks, mitte html päisesse panekuks
+var alg = $M(a[0]).minor(1,1,a[0].length,a[0].length);
+console.log(alg.inspect());
 
 var hetk_a_sõne = "";
 for (var j = 0; j<a[aktiivne-2].length; j++){
@@ -13,7 +14,9 @@ for (var j = 0; j<a[aktiivne-2].length; j++){
 		
 	}   
 }	
-
+if (üks==true){
+	hetk_a_sõne=null;
+}
 //console.log(hetk_a_sõne);
 
 
@@ -21,8 +24,8 @@ for (var j = 0; j<a[aktiivne-2].length; j++){
 
 if (alg.cols()>1){
 	if (alg.inverse() != null){
-	console.log("Sylvesteri arvates on pöördmaatriks: \n" + alg.inverse().inspect());
-	var inv = alg.inverse();
+		console.log("Sylvesteri arvates on pöördmaatriks: \n" + alg.inverse().inspect());
+		var inv = alg.inverse();
 	}else{
 		var inv = $M([[]]);
 	}

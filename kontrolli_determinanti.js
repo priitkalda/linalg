@@ -1,5 +1,5 @@
-	
-	
+// see fail on mõeldud php-ga skripti sisse trükkimiseks, mitte html päisesse panekuks
+
 var alg = $M(a[0]);
 
 // erijuht, kui algne maatriks on 1x1

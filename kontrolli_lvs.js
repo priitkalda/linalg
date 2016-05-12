@@ -1,24 +1,31 @@
-
+// see fail on mõeldud php-ga skripti sisse trükkimiseks, mitte html päisesse panekuks
 var lahendid_alg = [];
 var lahendid = [];
 var vabad = [];
 var vabad_vaartused = [];
+var alg = $M(a[0]);
 // sisendi lugemine
 
 	for(var i = 0;i<a[a.length-1][0].length-1; i++){
 
 		//$("#lvs_lah"+i).attr("class", "sisend_väli_kordaja lvs");
 		//console.log($("#lvs_lah"+i).val() );
+		
+		
 		lahendid_alg.push(  $("#lvs_lah"+i).val()  );
 		lahendid.push(  $("#lvs_lah"+i).val()  );
-		
+		//console.log(üks);
 		if(üks != 1){
+			$("#lvs_lah"+i).attr("class", "sisend_väli_kordaja lvs");
 			vabad.push(  "c"+(i+1)  );
 			if(Math.floor((Math.random() * 2) + 1) ==1){
 				vabad_vaartused.push(  Math.floor((Math.random() * 100) + 1)  );
 			}else{
 				vabad_vaartused.push(  Math.floor((Math.random() * 100) + 1)*(-1)  );
 			}
+		}else{
+			
+			$("#lvs_lah"+i).attr("class", "sisend_väli_kordaja lvs1");
 		}
 	}
 	//console.log(vabad);
@@ -29,7 +36,8 @@ var vabad_vaartused = [];
 		for(var i = 0;i<lahendid.length; i++){
 			for(var j = 0;j<vabad.length; j++){
 				if(lahendid[i].indexOf(vabad[j]) > -1){
-					lahendid[i]=lahendid[i].replace(vabad[j], vabad_vaartused[j]);
+					var vaba = new RegExp(vabad[j],"g");
+					lahendid[i]=lahendid[i].replace(vaba, vabad_vaartused[j]);
 				}
 			
 			}

@@ -1,4 +1,4 @@
-
+// see fail on mõeldud php-ga skripti sisse trükkimiseks, mitte html päisesse panekuks
 var printMurd = function(murrusõne, kasSulud){
 	var ava = "";
 	var sulge = "";

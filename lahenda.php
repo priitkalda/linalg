@@ -1,35 +1,44 @@
  <?php
-
+	// ülesande toomine andmebaasist
 	include_once 'andmebaas.php';
-	$result = ülesanne($_GET['ülesanne']);
-	
-	$toores = ($result[0]['sisu']);
-	$tüüp = ($result[0]['tüüp']);
-	$sammud = ($result[0]['sammud']);
-	$hakkliha = explode("\n", $toores);
-	$tulem = "[[";
-	foreach($hakkliha as $result) {
-		$tulem = $tulem . "[";
-		$hakkliha2 = explode(" ", $result);
-		foreach($hakkliha2 as $result2) {
-			if (strpos($result2, '/') !== false) {
-				$hakkliha3 = explode("/", $result2);
-				$tulem = $tulem . "math.fraction(" . $hakkliha3[0] . ", " . $hakkliha3[1] . "),";
+	if (isset($_GET['ülesanne'])){
+		$result = ülesanne($_GET['ülesanne']);
+		
+		if( !(array_key_exists ( 0 ,$result) )){
+			include_once('viga.html');
+			die();
+		}
+		$toores = ($result[0]['sisu']);
+		$tüüp = ($result[0]['tüüp']);
+		$sammud = ($result[0]['sammud']);
+		$hakkliha = explode("\n", $toores);
+		$tulem = "[[";
+		foreach($hakkliha as $result) {
+			$tulem = $tulem . "[";
+			$hakkliha2 = explode(" ", $result);
+			foreach($hakkliha2 as $result2) {
+				if (strpos($result2, '/') !== false) {
+					$hakkliha3 = explode("/", $result2);
+					$tulem = $tulem . "math.fraction(" . $hakkliha3[0] . ", " . $hakkliha3[1] . "),";
+				}
+				else if (strpos($result2, '.') !== false) {
+					$tulem = $tulem . "math.fraction(" . $result2 . "),";
+				}
+				else {
+					$tulem = $tulem . "math.fraction(" . $result2 . ", 1),";
+				}
 			}
-			else if (strpos($result2, '.') !== false) {
-				$tulem = $tulem . "math.fraction(" . $result2 . "),";
-			}
-			else {
-				$tulem = $tulem . "math.fraction(" . $result2 . ", 1),";
-			}
+
+			$tulem = $tulem . "],";
 		}
 
-		$tulem = $tulem . "],";
+		$tulem = $tulem . "]]";
+		
+		$a = [$tulem, $tüüp, $sammud];
+	}else{
+		include_once('viga.html');
+		die();
 	}
-
-	$tulem = $tulem . "]]";
-	
-	$a = [$tulem, $tüüp, $sammud];
 	
 	function ava_js ($nimi){
 		if ($fh = fopen($nimi, "r")) {
@@ -39,38 +48,36 @@
 	}
  ?>
 <!doctype html>
-
 <html lang="et">
      <head>
 		<meta charset="utf-8">
         <title><?php echo "Ülesanne ".$_GET['ülesanne']; ?></title>
         <META name="Priit Kalda" content="Name">
 		<link rel="stylesheet" type="text/css" href="stiil.css">
-     </head>
-     <body> 
-	 
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.1.0/math.min.js"></script>
-	<script>
-	if (typeof math == 'undefined') {
-		document.write(unescape("%3Cscript src='math.min.js' type='text/javascript'%3E%3C/script%3E"));
-	}
-	</script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-	<script>
-	if (typeof jQuery == 'undefined') {
-		document.write(unescape("%3Cscript src='jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
-	}
-	</script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/sylvester/0.1.3/sylvester.js"></script>
-	<script>
-	if (typeof Matrix == 'undefined') {
-		document.write(unescape("%3Cscript src='sylvester.js' type='text/javascript'%3E%3C/script%3E"));
-	}
-	</script>
-	<script src="renderda_murd.js"></script>
-<script>
 
+		<!-- lae kohalikud koopiad javascriptidest, kui pilves olevad pole saadaval -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.1.0/math.min.js"></script>
+		<script>
+		if (typeof math == 'undefined') {
+			document.write(unescape("%3Cscript src='math.min.js' type='text/javascript'%3E%3C/script%3E"));
+		}
+		</script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script>
+		if (typeof jQuery == 'undefined') {
+			document.write(unescape("%3Cscript src='jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+		}
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/sylvester/0.1.3/sylvester.js"></script>
+		<script>
+		if (typeof Matrix == 'undefined') {
+			document.write(unescape("%3Cscript src='sylvester.js' type='text/javascript'%3E%3C/script%3E"));
+		}
+		</script>
+		<script src="renderda_murd.js"></script>
+		<script>
 
+// põhiprogramm
 var kasVeerud = false;
 var kasVahetada = false;
 var kasSama = false;
@@ -132,7 +139,8 @@ var teated = {
 "vale_lõpp" : "Päris nii see siiski pole. Võtke mõned sammud tagasi ja proovige midagi muud.",
 "õige_lõpp" : "Väga tubli. Olete jõudnud õige vastuseni.",
 "desync_klient1_serv0" : "Kuidagiviisi leiab teie arvuti, et teie vastus on õige, kuid meie andmete põhjal on teie vastus vale.",
-"desync_klient0_serv1" : "Kuidagiviisi leiab teie arvuti, et teie vastus on vale, kuid meie andmete põhjal on teie vastus õige.",
+"desync_klient0_serv1" : "Väga tubli. Meie andmetel on teie vastus õige.",
+"lvs_esit_pooleli" : "Teil on lahendite esitamine pooleli. Kui te olete ümber mõelnud, vajutage tagasi.",
 }
 
 var sisend_v2li = '<input type="text" name="kordaja" id="kordaja" class="sisend_väli_kordaja" value="">';
@@ -208,10 +216,15 @@ var renderda_maatriks = function(mitmes){
 	vaheinfo.textContent = "->";
 	
 	var vaheinfo2 = document.createElement('div');
-    vaheinfo2.setAttribute('class', 'eelinfo');
+	
+	if( 1== <?php echo $a[1] ?> && a[mitmes].length==0  ){
+		vaheinfo2.setAttribute('class', 'eelinfo ainult');
+	}else{
+		vaheinfo2.setAttribute('class', 'eelinfo');
+	}
     vaheinfo2.setAttribute('id', 'eelinfo_'+(mitmes));
 	
-	
+	// ülesande tüüp on determiant
 	if( 1== <?php echo $a[1] ?>   ){
 		vaheinfo.textContent = "=";
 		var korrutusmärk = "";
@@ -222,6 +235,7 @@ var renderda_maatriks = function(mitmes){
 		if (ak[mitmes].compare(1) !=0 || (a[mitmes].length <= 0 )  )  {
 			vaheinfo2.innerHTML =  printMurd(ak[mitmes].toFraction(false), true)+korrutusmärk;
 		}
+		// ülesande tüüp on astak
 	}else if(4== <?php echo $a[1] ?> ){
 		
 		vaheinfo.textContent = "=";
@@ -238,7 +252,7 @@ var renderda_maatriks = function(mitmes){
 	
 	var tbl = document.createElement('table');
     tbl.setAttribute('id', 'maatriksi_tabel_'+(mitmes));
-	
+	// ülesande tüüp on determiant
 	if( 1== <?php echo $a[1] ?>){
 		
 		tbl.setAttribute('style', 'border-left: 2px solid #000;border-right: 2px solid #000;');
@@ -270,11 +284,11 @@ var renderda_maatriks = function(mitmes){
 				metalahter_div.setAttribute('class', 'veeru_info');
 				tabeli_sisu_div.appendChild(metalahter_div);
 			}
-			
-			if(jj == a[mitmes].length-1 && 2== <?php echo $a[1] ?>){
-				td.setAttribute('style', 'border-right: 2px solid #000;');
+											// ülesande tüüp on pöördmaatriks
+			if(jj == a[mitmes].length && 2== <?php echo $a[1] ?>){
+				td.setAttribute('style', 'border-left: 2px solid #000;');
 			}
-			
+												// ülesande tüüp on lineaarvõrrandisüsteem
 			if(jj == a[mitmes][j].length-2 && 3== <?php echo $a[1] ?>){
 				td.setAttribute('style', 'border-right: 2px solid #000;');
 			}
@@ -321,8 +335,9 @@ var renderda_aktiivsed_maatriksid = function(mitmes){
 	for (var i = ad[ad.length-1]; i > 0 ; i-- ){
 		
 		renderda_maatriks(a.length-i);	
-		console.log(mitmes);
+		//console.log(mitmes);
 		// õpiprogramm
+								// ülesande tüüp on determiant
 		if((aktiivne-1)==(mitmes) && 1== <?php echo $a[1] ?> && vajadus_õppida){
 			lukk = true;
 			vajadus_õppida = false;
@@ -481,12 +496,16 @@ var eemalda_nullid = function(){
 		if (ad[ad.length-1]==1 && a[a.length-1].length==0){
 			kontrolli_vastust();
 			$('#järelinfo_' + (ak.length-1)).empty();
+			vormista_kast_arvuliseks_vastuseks(ak.length-1);
 		}
 	}
 }
 
-// vastuse kontrolli testimise abi
+
 		<?php
+		
+		//vastuse automaatkontrolli testimise abi. Teeb muutuja alg kättesaadavaks brauseri konsoolis.
+		/*
 		if ($a[1]==1){
 			echo '
 		var alg = $M(a[0]);		
@@ -507,7 +526,7 @@ var eemalda_nullid = function(){
 		var alg = $M(a[0]);
 ';
 			
-		}
+		} */
 		?>
 		
 var kontrolli_vastust = function(üks){
@@ -556,6 +575,7 @@ var kontrolli_vastust = function(üks){
 					
 					$("#kast_"+ (	a.length-1 )).attr("class", "kast õige");
 					$("#eelinfo_"+ (	a.length-1 )).attr("class", "eelinfo õige");
+					$("#järelinfo_"+ (	a.length-1 )).empty();
 					$("#järelinfo_"+ (	a.length-1 )).append("Õige!");
 					teata("õige_lõpp");
 					
@@ -563,6 +583,7 @@ var kontrolli_vastust = function(üks){
 					//$("#kast_"+ (	a.length-1) ).css("background-color","darkred");
 					$("#kast_"+ (	a.length-1) ).attr("class", "kast vale");
 					$("#eelinfo_"+ (	a.length-1 )).attr("class", "eelinfo vale");
+					$("#järelinfo_"+ (	a.length-1 )).empty();
 					$("#järelinfo_"+ (	a.length-1 )).append("Vale!");
 					teata("vale_lõpp");
 				}else{
@@ -570,6 +591,7 @@ var kontrolli_vastust = function(üks){
 					//$("#kast_"+ (	a.length-1 )).css("background-color","darkgoldenrod");
 					$("#kast_"+ (	a.length-1 )).attr("class", "kast");
 					$("#eelinfo_"+ (	a.length-1 )).attr("class", "eelinfo");
+					$("#järelinfo_"+ (	a.length-1 )).empty();
 				}
 				
 			}
@@ -580,6 +602,7 @@ var kontrolli_vastust = function(üks){
 					//$("#kast_"+ (	a.length-1 )).css("background-color","darkgreen");	
 					$("#kast_"+ (	a.length-1 )).attr("class", "kast õige");
 					$("#eelinfo_"+ (	a.length-1 )).attr("class", "eelinfo õige");
+					$("#järelinfo_"+ (	a.length-1 )).empty();
 					$("#järelinfo_"+ (	a.length-1 )).append("Õige!");
 					teata("õige_lõpp");
 				}else if($kliendi_arvamus==0){
@@ -588,6 +611,7 @@ var kontrolli_vastust = function(üks){
 					$("#kast_"+ (	a.length-1 )).attr("class", "kast õige");
 					$("#eelinfo_"+ (	a.length-1 )).attr("class", "eelinfo õige");
 					//alert("DESYNC. Klient ütles et on VALE, server ütles et on ÕIGE");
+					$("#järelinfo_"+ (	a.length-1 )).empty();
 					$("#järelinfo_"+ (	a.length-1 )).append("Õige!");
 					teata("desync_klient0_serv1");
 				}else{
@@ -595,6 +619,7 @@ var kontrolli_vastust = function(üks){
 					//$("#kast_"+ (	a.length-1 )).css("background-color","darkgreen");
 					$("#kast_"+ (	a.length-1 )).attr("class", "kast õige");
 					$("#eelinfo_"+ (	a.length-1 )).attr("class", "eelinfo õige");
+					$("#järelinfo_"+ (	a.length-1 )).empty();
 					$("#järelinfo_"+ (	a.length-1 )).append("Õige!");
 					teata("õige_lõpp");
 				}
@@ -605,6 +630,7 @@ var kontrolli_vastust = function(üks){
 					//$("#kast_"+ (	a.length-1) ).css("background-color","darkred");
 					$("#kast_"+ (	a.length-1) ).attr("class", "kast vale");
 					$("#eelinfo_"+ (	a.length-1 )).attr("class", "eelinfo vale");
+					$("#järelinfo_"+ (	a.length-1 )).empty();
 					$("#järelinfo_"+ (	a.length-1 )).append("Vale!");
 					//alert("DESYNC. Klient ütles et on ÕIGE, server ütles et on VALE");
 					teata("desync_klient1_serv0");
@@ -612,19 +638,21 @@ var kontrolli_vastust = function(üks){
 					// SYNC (nii klient kui ka server nõustusid teineteisega, et on VALE)
 					//$("#kast_"+ (	a.length-1) ).css("background-color","darkred");
 					$("#kast_"+ (	a.length-1) ).attr("class", "kast vale");
-					$("#järelinfo_"+ (	a.length-1 )).append("Vale!");
 					$("#eelinfo_"+ (	a.length-1 )).attr("class", "eelinfo vale");
+					$("#järelinfo_"+ (	a.length-1 )).empty();
+					$("#järelinfo_"+ (	a.length-1 )).append("Vale!");
 					teata("vale_lõpp");
 				}else{
 					// siia ei jõua niikuinii (klient pole midagi arvanud)
 					//$("#kast_"+ (	a.length-1) ).css("background-color","darkred");
 					$("#kast_"+ (	a.length-1) ).attr("class", "kast vale");
-					$("#järelinfo_"+ (	a.length-1 )).append("Vale!");
 					$("#eelinfo_"+ (	a.length-1 )).attr("class", "eelinfo vale");
+					$("#järelinfo_"+ (	a.length-1 )).empty();
+					$("#järelinfo_"+ (	a.length-1 )).append("Vale!");
 					teata("vale_lõpp");
 				}
 			}
-			console.log("server: " + data);
+			//console.log("server: " + data);
 			}
 		});
 
@@ -635,7 +663,7 @@ var kontrolli_vastust = function(üks){
 	}
 }
 
-// rakenda hiire kliki ja hiire üle lohistamise sündmused just renderdatud maatriksitele
+// rakenda hiire üle lohistamise sündmused just renderdatud maatriksitele
 var rakenda_hiire_sündmused = function(mitmes){
 
 	//$('td').unbind('click');
@@ -703,6 +731,7 @@ var rakenda_hiire_sündmused = function(mitmes){
 				
 				var astak = a[aktiivne-1].length;
 				var aste = 0;
+						// ülesande tüüp on lineaarvõrrandisüsteem
 						if( 3== <?php echo $a[1] ?>){				
 							var kaks=1;
 						}else{
@@ -822,7 +851,7 @@ var rakenda_hiire_sündmused = function(mitmes){
 				$('#hetke_kordinaadid').append("("+s + ", " + t+")");
 				
 				if(kasVahetada) {
-							getInfoLahter().append('<span class=vaheta_ikoon_tekst>&#x21bb;</span>');
+					getInfoLahter().append('<span class=vaheta_ikoon_tekst>&#x21bb;</span>');
 				}
 				
 				if(kasVeerud == true){
@@ -845,17 +874,20 @@ var rakenda_hiire_sündmused = function(mitmes){
 			$('#maatriksi_tabel_'+(aktiivne-1)+' td').removeClass('värvitud_roheline');
 		}
 	);
+	
+	// ülesande tüüp on determiant
 	if( 1== <?php echo $a[1] ?>  ){
-		
+		// kordajate kokkuvõtmine, kui osadeterminandid on leitud
 		$('#eelinfo_'+(aktiivne-1)).click(
 		function() {
 			if(!lukk){
-			eemalda_nullid();
+				eemalda_nullid();
 			}
 		}
 		);
 	}	
-			
+
+// vaja teha iga kord, kui ette tuua sisestuse dialoog
 var kordaja_tekstivälja_tegevused = function(){
 	
 	$( "#kordaja" ).keyup(function() {
@@ -870,8 +902,6 @@ var kordaja_tekstivälja_tegevused = function(){
 	
 	$('#kordaja').focus();
 	$('#kordaja').select();						  
-	
-
 	
 	$('#kordaja').keypress(function(e) {
 		if (e.which == 13) {
@@ -987,6 +1017,7 @@ var hiirekliki_tegevus = function(aktiivne){
 				console.log(milline);
 				if(ad[ad.length-1]==1){
 					$('#järelinfo_' + milline).empty();
+					vormista_kast_arvuliseks_vastuseks(milline);
 					kontrolli_vastust();
 				}else{
 
@@ -1013,6 +1044,7 @@ var hiirekliki_tegevus = function(aktiivne){
 				vigane_kasutaja_sisend(e);
 			}
 		}
+		// nullidest rea eemaldamine
 		else if(kasLvs){
 			if (liidetav == 0){
 				klooni();
@@ -1021,6 +1053,7 @@ var hiirekliki_tegevus = function(aktiivne){
 			}
 			
 		}
+		// astaku esitamine
 		else if(kasAstmed){
 			try{
 				var kordaja = math.fraction($('#kordaja').val());
@@ -1029,6 +1062,7 @@ var hiirekliki_tegevus = function(aktiivne){
 				getInfoLahter().append('r='+printMurd( kordaja.toFraction(false) ));  //joonista t2his
 				
 					klooni();
+					// ülesande tüüp on lineaarvõrrandisüsteem
 					if( 3== <?php echo $a[1] ?>){
 
 						var algg = $M(a[milline]);
@@ -1046,6 +1080,7 @@ var hiirekliki_tegevus = function(aktiivne){
 						renderda_aktiivsed_maatriksid();
 					}
 					
+				// ülesande tüüp on astak
 				if( 4== <?php echo $a[1] ?>){
 					a[milline] = [];
 					ak[milline] = math.multiply(kordaja,ak[milline]);
@@ -1053,13 +1088,14 @@ var hiirekliki_tegevus = function(aktiivne){
 					$('#järelinfo_' + milline).empty();
 					$('#eelinfo_' + milline).empty();
 					$('#eelinfo_' + milline).append(''+printMurd( kordaja.toFraction(false) ));
-				
+				    vormista_kast_arvuliseks_vastuseks(milline);
 					kontrolli_vastust();
 				}
 			}catch(e){
 				vigane_kasutaja_sisend(e);
 			}
 		}
+		// pole enam kasutusel
 		else if(kasPöörd){
 			
 			//if(liidetav == (a[milline-1].length) * (a[milline-1].length)  ){
@@ -1077,6 +1113,7 @@ var hiirekliki_tegevus = function(aktiivne){
 				kontrolli_vastust();
 			//}
 		}
+		// jäta meelde esimene klõps
 		else if(kasOotan){
 			
 			
@@ -1127,14 +1164,14 @@ var hiirekliki_tegevus = function(aktiivne){
 							a[milline][j][t-1] = a[milline][j][liidetav-1].clone();
 							a[milline][j][liidetav-1] = temp.clone();
 						}
-						
-if( 1== <?php echo $a[1] ?>  ){
-	
-	if(liidetav != t){
-		ak[milline] = math.multiply(math.fraction(-1,1), ak[milline]); 
-	}
-						
-}
+						// ülesande tüüp on determiant
+						if( 1== <?php echo $a[1] ?>  ){
+							
+							if(liidetav != t){
+								ak[milline] = math.multiply(math.fraction(-1,1), ak[milline]); 
+							}
+												
+						}
 
 					}
 					else if(liidetav == t) {
@@ -1145,9 +1182,10 @@ if( 1== <?php echo $a[1] ?>  ){
 						for (var j = 0; j<a[milline].length; j++){
 							a[milline][j][t-1] = math.multiply(kordaja, a[milline][j][t-1])  ;                //muuda m2lus
 						}
-if( 1== <?php echo $a[1] ?>  ){
-						ak[milline] = math.multiply(kordaja.inverse(), ak[milline]); 
-}
+						// ülesande tüüp on determiant
+						if( 1== <?php echo $a[1] ?>  ){
+							ak[milline] = math.multiply(kordaja.inverse(), ak[milline]); 
+						}
 					}
 					else{
 						// veerule mingi muu veeru*k liitmine
@@ -1172,11 +1210,12 @@ if( 1== <?php echo $a[1] ?>  ){
 							a[milline][s-1][j] = a[milline][liidetav-1][j].clone();
 							a[milline][liidetav-1][j] = temp.clone();
 						}
-if( 1== <?php echo $a[1] ?>  ){
-	if(liidetav != s){
-						ak[milline] = math.multiply(math.fraction(-1,1), ak[milline]); 
-	}
-}
+						// ülesande tüüp on determiant
+						if( 1== <?php echo $a[1] ?>  ){
+							if(liidetav != s){
+								ak[milline] = math.multiply(math.fraction(-1,1), ak[milline]); 
+							}
+						}
 					}
 					else if(liidetav==s) {
 						// rea korrutamine nullist erineva arvuga
@@ -1187,9 +1226,10 @@ if( 1== <?php echo $a[1] ?>  ){
 						for (var j = 0; j<a[milline][0].length; j++){
 							a[milline][s-1][j] = math.multiply(kordaja, a[milline][s-1][j])  ;                //muuda m2lus
 						}
-if( 1== <?php echo $a[1] ?>  ){
-						ak[milline] = math.multiply(kordaja.inverse(), ak[milline]); 
-}
+						// ülesande tüüp on determiant
+						if( 1== <?php echo $a[1] ?>  ){
+							ak[milline] = math.multiply(kordaja.inverse(), ak[milline]); 
+						}
 						
 					}
 					else{
@@ -1218,6 +1258,7 @@ if( 1== <?php echo $a[1] ?>  ){
 			
 		}else{
 			kasOotan = true;
+			// jäta meeldi esimesena klõpsatud veerg või rida
 			if(kasVeerud == true){		
 				liidetav = t;
 			}else{
@@ -1231,17 +1272,18 @@ if( 1== <?php echo $a[1] ?>  ){
 
 $('#maatriksi_tabel_'+(aktiivne-1)+' td').click(
 	function(e) {
+		// kas on pooleli kasutaja poolt mingi kordaja üle küsimine
 		if (!lukk){
-		//console.log("e.target.className: "+e.target.className+", this: "+this);
-		 if (e.target.className == "rea_info" || e.target.className == "veeru_info"|| e.target.className == "sisend_väli_kordaja"  ){
-		return;
-		 }
-		hiirekliki_tegevus(aktiivne);
-		if(!viimati_erind){
-			$(this).mouseover();
-		}else{
-			viimati_erind=false;
-		}
+			//console.log("e.target.className: "+e.target.className+", this: "+this);
+			if (e.target.className == "rea_info" || e.target.className == "veeru_info"|| e.target.className == "sisend_väli_kordaja"  ){
+				return;
+			}
+			hiirekliki_tegevus(aktiivne);
+			if(!viimati_erind){
+				$(this).mouseover();
+			}else{
+				viimati_erind=false;
+			}
 		}
 	}
 );
@@ -1272,6 +1314,7 @@ var vigane_kasutaja_sisend = function(e){
 	  //alert("Error: " + e );
 }
 
+//argumentdiks false, kui maatriks pole pööratav kasutaja arvates, muul juhul kontrollitakse 
 var pöördmaatriksi_kontrollimine = function(kasutaja_arvates_pööratav){
 	if(kasutaja_arvates_pööratav){
 		s=1;
@@ -1322,29 +1365,42 @@ var pöördmaatriksi_kontrollimine = function(kasutaja_arvates_pööratav){
 		ak.push(math.fraction(0));
 		ad.push(1);
 		renderda_aktiivsed_maatriksid();
-		
-		$('#eelinfo_' + (a.length-1)).css("right","0");
-		$('#järelinfo_' + (a.length-1)).css("left","150px");
-		$('#järelinfo_' + (a.length-1)).empty();
-		$('#eelinfo_' + (a.length-1)).append("Pole pööratav");
-		kontrolli_vastust();
+		vormista_eelinfo_sõnaliseks_vastuseks("Pole pööratav");
+		kontrolli_vastust(true);
 		
 	}
 }
 
+var vormista_eelinfo_sõnaliseks_vastuseks = function(sõna){
+		$('#eelinfo_' + (a.length-1)).css("right","0");
+		$('#järelinfo_' + (a.length-1)).css("left","170px");
+		$('#järelinfo_' + (a.length-1)).empty();
+		$('#eelinfo_' + (a.length-1)).append(sõna);
+}
+
+var vormista_kast_arvuliseks_vastuseks = function(milline){
+	$('#järelinfo_' + milline).css("transform", "translateY(100%)");
+	$('#eelinfo_' + milline).css("left", "0");
+	$('#eelinfo_' + milline).css("right", "initial");
+}
+
 var lvs_lah_puuduvad = function(){
+	if(!kasLvs_esitamine){
+		kasLvs_esitamine = true;
 		a.push([[]]);
 		ak.push(math.fraction(0));
 		ad.push(1);
 		renderda_aktiivsed_maatriksid();
 		
-		$('#eelinfo_' + (a.length-1)).css("right","0");
-		$('#järelinfo_' + (a.length-1)).css("left","150px");
-		$('#järelinfo_' + (a.length-1)).empty();
-		$('#eelinfo_' + (a.length-1)).append("Pole lahenduv");
-		kontrolli_vastust();	
+		vormista_eelinfo_sõnaliseks_vastuseks("Pole lahenduv");
+		kontrolli_vastust();
+	}
+	else{
+	teata("lvs_esit_pooleli");
+}	
 }
 
+// argumendiks 1, kui on täpselt 1 lahend
 var lvs_lahendite_kontrollimine = function(üks){
 	if(!kasLvs_esitamine){
 		samme_hetk++;
@@ -1406,180 +1462,167 @@ var lvs_lahendite_kontrollimine = function(üks){
 				
 			tr.appendChild(td);	
 				
-				tbl.appendChild(tr);
+			tbl.appendChild(tr);
 				
-			}
-			/*
-			var inp = document.createElement('div');
-			inp.setAttribute('class', 'eelinfo lvs');
-			inp.setAttribute('id', 'eelinfo_'+i);
-			
-			if (üks != 1){
-				inp.textContent="∞ lahendeid";
-			}else{
-				inp.textContent="1 lahend";
-			}
-			
-			kast.appendChild(inp);
-			*/
-			var inp = document.createElement('div');
-			inp.setAttribute('class', 'järelinfo lvs');
-			inp.setAttribute('id', 'järelinfo_'+i);
-			inp.textContent="Kontroll.";
-			
-
-			kast.appendChild(inp);
-			
-			
-			
-			matDiv.appendChild(tbl);
-			if (üks != 1){
-				matDiv.innerHTML += ",kus c<sub>1</sub>,...,c<sub>"+i+"-r</sub> ∈ ℝ ja r on astak";
-			}
-			kast.appendChild(matDiv);
-			document.getElementById('keha').appendChild(kast); 
-			
-			$('#järelinfo_'+i).click(function() {
-				try{
-					kontrolli_vastust(üks);
-				}
-				catch(e){
-					vigane_kasutaja_sisend(e);
-					
-				}
-				
-			});
-			
-			
 		}
+		/*
+		var inp = document.createElement('div');
+		inp.setAttribute('class', 'eelinfo lvs');
+		inp.setAttribute('id', 'eelinfo_'+i);
+		
+		if (üks != 1){
+			inp.textContent="∞ lahendeid";
+		}else{
+			inp.textContent="1 lahend";
+		}
+		
+		kast.appendChild(inp);
+		*/		
+		
+		var inp = document.createElement('div');
+		inp.setAttribute('class', 'järelinfo');
+		inp.setAttribute('id', 'järelinfo_'+(aktiivne));
+		kast.appendChild(inp);
+		
+		var inp = document.createElement('div');
+		inp.setAttribute('class', 'järelinfo lvs');
+		inp.setAttribute('id', 'kontroll_nupp_'+(aktiivne));
+		inp.textContent="Kontroll.";
+		kast.appendChild(inp);
+		
+		
+		
+		matDiv.appendChild(tbl);
+		if (üks != 1){
+			//matDiv.innerHTML += ",kus c<sub>1</sub>,...,c<sub>r</sub> ∈ ℝ ja r on astak";
+		}
+		kast.appendChild(matDiv);
+		document.getElementById('keha').appendChild(kast); 
+		
+		$('#kontroll_nupp_'+(aktiivne)).click(function() {
+			try{
+				
+				kontrolli_vastust(üks);
+			}
+			catch(e){
+				vigane_kasutaja_sisend(e);
+				
+			}
+			
+		});
+			
+			
+		}else{
+	teata("lvs_esit_pooleli");
+}	
 
 }
 
 
 
-</script>
+		</script>
+		<script src="dokument_valmis.js"></script>
+	</head>
+		 
+		 
+		 
+	<body>   
+<!--	<div id="abi_1" class="abi"></div>
+<script src="pdfobject.min.js"></script>
+<script>PDFObject.embed("pdf/baka.pdf", "#abi_1");</script>
+-->
+	<div>	 
+		<div class="tööriistariba" id="tööriistariba">
+			<input type="button" value="Tagasi" id="tagasi">
+			 
+			 <?php 
+			echo '<div class="eraldaja"></div>';
+			if ($a[1]==1  ||$a[1]==4  ||   isset($_GET['godmode'])  ){
+				echo '<input type="radio" name="gender" id="raadio_veerud" value="Veerud">
+					  <label for="raadio_veerud">Veerud</label>';
+			}
+
+			echo '<input type="radio" name="gender" id="raadio_read" value="Read">
+				 <label for="raadio_read">Read</label>';	 
+			echo '<div class="eraldaja0"></div>';
+			echo '<input type="checkbox" name="tere" id="linnuke_liitkor" value="Liitmine ja korrutamine">
+				 <label for="linnuke_liitkor">Liitmine ja korrutamine</label>';	 
+			echo '<input type="checkbox" name="tere" id="linnuke_vahetus" value="Vahetus">
+				 <label for="linnuke_vahetus">Vahetus</label>';	 
+			echo '<div class="eraldaja2"></div>';
+			
+			if ($a[1]==1 || isset($_GET['godmode']) ){
+				 echo '<input type="checkbox" name="tere" id="linnuke_arendamine" value="Arenda">
+					   <label for="linnuke_arendamine">Arenda</label>   '		; 
+				 echo '<div class="eraldaja2"></div>';
+				 echo '<input type="checkbox" name="tere" id="linnuke_determinandi_esitamine" value="Determinandi">
+					   <label for="linnuke_determinandi_esitamine">Determinant</label>';
+				 echo '<div class="eraldaja2"></div>';
+			}
+
+			if ($a[1]==3  ||isset($_GET['godmode'])){
+				 echo '<input type="checkbox" name="tere" id="linnuke_eemalda_nullidest_rida" value="Nullidest">
+					   <label for="linnuke_eemalda_nullidest_rida">Nullidest rida</label>   '	 ;
+				 echo '<div class="eraldaja2"></div>';
+			}
+			
+			if ($a[1]==2|| isset($_GET['godmode'])){
+			
+				 // echo '<input type="checkbox" name="tere" id="linnuke_pöördmaatriksi_esitamine" value="pm">
+				 // <label for="linnuke_pöördmaatriksi_esitamine">Pöördmaatriks</label>   '	 ;
+				 // echo '<div class="eraldaja2"></div>';
+				 
+				 echo '<div id="rippmenüü" class="rippmenüü_hoidija"><div class="rippmenüü">
+					   <input type="button" name="tere" id="nupp_pöörd_pole" value="Pöördmaatriksit ei leidu">
+					   <input type="button" name="tere" id="nupp_pöörd_valmis" value="Pöördmaatriks on püstkriipsust paremal">
+					   </div></div>';
+				 echo '<input type="button" name="tere" id="nupp_pöörd" value="Pöördmaatriks">';
+				 echo '<div class="eraldaja2"></div>';	 
+			}
+
+			if ($a[1]==4||
+			//$a[1]==3|| 
+			isset($_GET['godmode'])){
+				echo '<input type="checkbox" name="tere" id="linnuke_astaku_esitamine" value="astk">
+					  <label for="linnuke_astaku_esitamine">Astak</label>   ';	
+				echo '<div class="eraldaja0"></div>';		 
+			}	
+
+
+			if ($a[1]==3|| isset($_GET['godmode'])){
+			
+				echo '<div id="rippmenüü_2" class="rippmenüü_hoidija"><div class="rippmenüü">		
+					 <input type="button" name="tere" id="nupp_lvs_0" value="Ei leidu ühtegi lahendit">		 
+					 <input type="button" name="tere" id="nupp_lvs_1" value="Leidub täpselt 1 lahend">		 
+					 <input type="button" name="tere" id="nupp_lvs_1+" value="Leidub rohkem kui 1 lahend">		
+					 </div></div>';
+				echo '<input type="button" value="Üldlahend" id="nupp_lvs_esitamine">';
+			}
+			 
+			 ?>
+
+			<div class="tööriistariba_parem lahenda" id="tööriistariba_parem">
 	 
-	<script src="dokument_valmis.js"></script>
+				<!--<input type="button" name="tere" id="nupp_abi_1" value="Kasutusjuhend">-->
+				<a href="pdf/baka.pdf" target="_blank">Kasutusjuhend</a>
+				<?php 
+					if (isset($_GET['lk'])){
+					echo '<a href="index.php?tüüp='.$a[1].'&lk='.$_GET['lk'].'">Tagasi Kataloogi</a>';
+					}
+				?>
+				<a href="index.php">Avaleht</a>
+			</div>
 	 
+		</div>
  
-<div>	 
-	 <div class="tööriistariba" id="tööriistariba">
-	 <input type="button" value="Tagasi" id="tagasi"></input>
-	 
-	 <?php 
-	 echo '<div class="eraldaja"></div>';
-if ($a[1]==1  ||$a[1]==4  ||   isset($_GET['godmode'])  ){
-	 
-		 
-		 echo '<input type="radio" name="gender" id="raadio_veerud" value="Veerud">
-		 <label for="raadio_veerud">Veerud</label>';
-}
-
-		 echo '<input type="radio" name="gender" id="raadio_read" value="Read">
-		 <label for="raadio_read">Read</label>';
-		 
-	 echo '<div class="eraldaja0"></div>';
-	 
-		 echo '<input type="checkbox" name="tere" id="linnuke_liitkor" value="Liitmine ja korrutamine">
-		 <label for="linnuke_liitkor">Liitmine ja korrutamine</label>';
-		 
-		 echo '<input type="checkbox" name="tere" id="linnuke_vahetus" value="Vahetus">
-		 <label for="linnuke_vahetus">Vahetus</label>';
-		 
-	 echo '<div class="eraldaja2"></div>';
-if ($a[1]==1 || isset($_GET['godmode']) ){
-		echo '<input type="checkbox" name="tere" id="linnuke_arendamine" value="Arenda">
-		 <label for="linnuke_arendamine">Arenda</label>   '		; 
-echo '<div class="eraldaja2"></div>';
-		 echo '<input type="checkbox" name="tere" id="linnuke_determinandi_esitamine" value="Determinandi">
-<label for="linnuke_determinandi_esitamine">Determinant</label>';
-echo '<div class="eraldaja2"></div>';
-}
-
-if ($a[1]==3  ||isset($_GET['godmode'])){
-		 echo '<input type="checkbox" name="tere" id="linnuke_eemalda_nullidest_rida" value="Nullidest">
-		 <label for="linnuke_eemalda_nullidest_rida">Nullidest rida</label>   '	 ;
-		 echo '<div class="eraldaja2"></div>';
-}
-if ($a[1]==2|| isset($_GET['godmode'])){
-	
-		 // echo '<input type="checkbox" name="tere" id="linnuke_pöördmaatriksi_esitamine" value="pm">
-		 // <label for="linnuke_pöördmaatriksi_esitamine">Pöördmaatriks</label>   '	 ;
-		 // echo '<div class="eraldaja2"></div>';
-		 echo '<div id="rippmenüü" class="rippmenüü_hoidija"><div class="rippmenüü">
-		
-		<input type="button" name="tere" id="nupp_pöörd_valmis" value="Pöördmaatriks on püstkriipsust paremal">
-		 
-		 <input type="button" name="tere" id="nupp_pöörd_pole" value="Pöördmaatriksit ei leidu">
-		
-		</div></div>';
-		
-		 echo '<input type="button" name="tere" id="nupp_pöörd" value="Pöördmaatriks">';
-		 echo '<div class="eraldaja2"></div>';
-		 
-}
-
-if ($a[1]==4||
-//$a[1]==3|| 
-isset($_GET['godmode'])){
-		 echo '<input type="checkbox" name="tere" id="linnuke_astaku_esitamine" value="astk">
-		 <label for="linnuke_astaku_esitamine">Astak</label>   ';	
-echo '<div class="eraldaja0"></div>';		 
-}
-
-
-if ($a[1]==3|| isset($_GET['godmode'])){
-	
-	echo '<div id="rippmenüü_2" class="rippmenüü_hoidija"><div class="rippmenüü">
-		
-		<input type="button" name="tere" id="nupp_lvs_0" value="Ei leidu ühtegi lahendit">
-		 
-		 <input type="button" name="tere" id="nupp_lvs_1" value="Leidub täpselt 1 lahend">
-		 
-		 <input type="button" name="tere" id="nupp_lvs_1+" value="Leidub rohkem kui 1 lahend">
-		
-		</div></div>';
-	
-	 echo '<input type="button" value="Üldlahend" id="nupp_lvs_esitamine"></input>';
-}
-	 
-	 ?>
-	 
-	
-	
-
-	 
-	 
-	 <div class="tööriistariba_parem" id="tööriistariba_parem">
-		<?php 
-		if (isset($_GET['lk'])){
-	 	echo '<a href="index.php?tüüp='.$a[1].'&lk='.$_GET['lk'].'">Tagasi Kataloogi</a>';
-		}
-?>
-	 	<a href="index.php">Avaleht</a>
-	 </div>
-	 
-	 </div>
-	 
-	 	 	 <div class="sammuloendur" id="sammuloendur">
-		 </div>
-	<div class="hetke_kordinaadid" id="hetke_kordinaadid">
-	 </div>
-	 
-	 	<div class="teatekeskus" id="teatekeskus">
-	 </div>
-	 
-     <div class="keha" id="keha">	 
+		<div class="sammuloendur" id="sammuloendur"></div>
+		<div class="hetke_kordinaadid" id="hetke_kordinaadid"></div>
+		<div class="teatekeskus" id="teatekeskus"></div>
+		<div class="laiuse_soovitus" id="laiuse_soovitus">Hoiatus: Nii kitsa akna suuruse korral võvad mõned programmi funktsioonid olla ekraani serva taga.</div>
+		<div class="keha" id="keha"></div>
 
 
 	 
 	 </div>
-
-
-	 
-	 </div>
-		  
-	
-     
      </body>
 </html>

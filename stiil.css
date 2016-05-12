@@ -1,4 +1,4 @@
-   body {
+body {
        margin: 0;
        padding: 0;
        font-family: Arial;
@@ -43,61 +43,40 @@
        height: 40px;
        white-space: nowrap;
    }
-   input[type=button] ,
+   input[type=button],
    input[type=radio] + label,
-     input[type=checkbox] + label {
-		border-bottom: 4px solid transparent;
-		
-	}   
-	input[type=button]:hover,
-	input[type=radio] + label:hover,
+   input[type=checkbox] + label {
+       border-bottom: 4px solid transparent;
+   }
+   input[type=button]:hover,
+   input[type=radio] + label:hover,
    input[type=checkbox] + label:hover {
-		color:black;
+       color: black;
        background-color: aliceblue;
-	} 
-	
-	input[type=radio]:checked + label,
-	input[type=checkbox]:checked + label {
-		border-bottom-color: orange;
-	}
-	input[type=radio],
-	input[type=checkbox]{
-   display:none;
-}
-   
-  input[type=button] {
-  
-		color:white;
-	font-size: 1em;
-	text-align: left;
-	background: none;
-	margin: 0;
-	padding: 0;
-	border-top: none;
-	border-left: none;
-	border-right: none;
-	cursor: pointer;
-}
+   }
+   input[type=radio]:checked + label,
+   input[type=checkbox]:checked + label {
+       border-bottom-color: orange;
+   }
+   input[type=radio],
+   input[type=checkbox] {
+       display: none;
+   }
+   input[type=button] {
+       color: white;
+       font-size: 1em;
+       text-align: left;
+       background: none;
+       margin: 0;
+       padding: 0;
+       border-top: none;
+       border-left: none;
+       border-right: none;
+       cursor: pointer;
+   }
+   input[type=button]:hover {} input[type=button]:focus {}
 
- input[type=button]:hover{
- }
- 
- input[type=button]:focus {
- 
-}
    
-   /*
-   .dec {
-       background-color: #DFDFDF;
-       font-weight: bold;
-   }
-   */
-   /*
-   .veeru_t2hised {
-       background-color: white;
-       border-style: solid;
-   }
-   */
    .värvitud_kollane {
        background-color: yellow;
    }
@@ -113,35 +92,28 @@
    .värvitud_roheline {
        background-color: lightgreen;
    }
-   /*
-   .formDontAffectLayout {
-       display: inline;
-   }
-   */
    
    .sisend_väli_kordaja {
        font-family: Arial;
        font-size: 30px;
        background-color: yellow;
        width: 40px;
-   }   
+   }
    .sisend_väli_kordaja.lvs {
        width: 400px;
    }
-     .sisend_väli_kordaja.lvs1 {
+   .sisend_väli_kordaja.lvs1 {
        width: 150px;
    }
-    .sisend_väli_kordaja.õpi {
-	
-	-webkit-box-shadow: 0px 0px 80px 0px aqua;
-	-moz-box-shadow:    0px 0px 80px 0px aqua;
-	box-shadow:         0px 0px 80px 0px aqua;
+   .sisend_väli_kordaja.õpi {
+       -webkit-box-shadow: 0px 0px 80px 0px aqua;
+       -moz-box-shadow: 0px 0px 80px 0px aqua;
+       box-shadow: 0px 0px 80px 0px aqua;
    }
    .sisend_väli_kordaja.punane {
        background-color: red;
    }
-   
-     .sisend_väli_kordaja.vale {
+   .sisend_väli_kordaja.vale {
        background-color: salmon;
    }
    .vaheta_ikoon_tekst {
@@ -149,7 +121,7 @@
    }
    div.tööriistariba {
        font-size: 20px;
-		color:white;
+       color: white;
        background-color: black;
        /* margin-bottom: 10px; */
        
@@ -160,47 +132,84 @@
        width: 100%;
        z-index: 1000;
        height: 27px;
-	   
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-   }  
-   
+       padding-top: 10px;
+       padding-left: 10px;
+       padding-right: 10px;
+   }
+   div.abi {
+       width: 1024px;
+       height: calc(100% - 50px);
+       position: absolute;
+       z-index: 999;
+       Left: 0;
+       right: 0;
+       margin-left: auto;
+       margin-right: auto;
+       display: none;
+   }
    div.tööriistariba_parem {
        font-size: 20px;
        /*background-color: pink;*/
        
-    padding-right: 20px;
+       padding-right: 20px;
        float: right;
+   }
+   @media screen and (max-width: 1100px) {
+
+       div.tööriistariba_parem.lahenda{
+           font-size: 12px;
+           /*background-color: pink;*/
+           
+           position: fixed;
+           padding-right: 20px;
+           right: 0;
+           top: 0;
+       }
+   }
+   div.laiuse_soovitus {
+       display: none;
+   }
+   @media screen and (max-width: 743px) {
+       div.tööriistariba {
+           display: flex;
+           overflow: hidden;
+       }
+       div.laiuse_soovitus {
+           display: inline;
+           left: 0px;
+           bottom: 0px;
+           z-index: 1;
+           color: white;
+           background-color: darkred;
+           position: fixed;
+           font-size: 20px;
+           margin-left: 2px;
+           margin-top: 2px;
+       }
    }
    div.hetke_kordinaadid {
        font-size: 15px;
        /*background-color: pink;*/
-       display: inline;
-       right:0;
-       bottom:0;
-		z-index: 999;
-		
-	 position: fixed;
        
-   }
-      div.teatekeskus {
        display: inline;
-       left:0px;
-       top:37px;
-		z-index: 999;
-		color:white;
-			background-color: black;
-			opacity:0.65;
-			
-	 position: fixed;
-	 font-size:20px;
-	 
-    margin-left: 2px;
-	
-    margin-top: 2px;
+       right: 0;
+       bottom: 0;
+       z-index: 999;
+       position: fixed;
    }
-   
+   div.teatekeskus {
+       display: inline;
+       left: 0px;
+       top: 37px;
+       z-index: 999;
+       color: white;
+       background-color: black;
+       opacity: 0.65;
+       position: fixed;
+       font-size: 20px;
+       margin-left: 2px;
+       margin-top: 2px;
+   }
    div.järelinfo {
        background-color: white;
        /* float: right; */
@@ -212,72 +221,93 @@
        /* height: 30px; */
        /* width: 40px; */
        
-		z-index: 996;
-		
+       z-index: 996;
+       opacity: 0.8;
        top: 50%;
        right: 0;
        transform: translateY(-50%);
        /* transform: translateX(-50%); */
        /* overflow: visible; */
-   }   
+   }
    div.järelinfo.ainult {
        left: 150px
-   } 
+   }
    div.järelinfo.lvs {
-	   text-decoration:underline; 
-   } 
+       opacity: 1;
+       text-decoration: underline;
+	   
+	   transform: initial;
+	   bottom: 0px;
+	   top: initial;
+	   right: 0px;
+   }
    div.järelinfo.lvs:hover {
        background: aliceblue;
    }
    div.eelinfo {
-		z-index: 990;
+       z-index: 990;
        background-color: pink;
        display: inline;
        /*float: left;*/
        position: absolute;
        top: 50%;
        /* right: 0; */
-		
-	   right: calc(100% - 60px);
-       
+       right: calc(100% - 60px);
        transform: translateY(-50%);
        /*left: 0;*/
    }
-      
-	  div.eelinfo.ainult {
-
-	   right: 0;
-       
+   div.eelinfo.ainult {    
+      right: 15px;
+      left: 0;
+      overflow: hidden;
+      text-align: right;
    }
-   
-    div.eelinfo.lvs {
-	left:0px;
+   div.eelinfo.lvs {
+       left: 0px;
    }
-   
+   div.eelinfo:hover {
+       z-index: 999;
+       background: aliceblue;
+       right: initial;
+       left: 0;
+       min-width: 60px;
+       text-align: right;
+   }
+   div.eelinfo.ainult:hover {
+       z-index: 999;
+       background: aliceblue;
+       min-width: 152px;
+   }
+   div.eelinfo.vale:hover,
+   div.eelinfo.õige:hover{
+       min-width: initial;
+       z-index: initial;
+       text-align: left;
+   }
    div.eelinfo.õige {
        background-color: lightgreen;
-	-webkit-box-shadow: 0px 0px 80px 0px lightgreen;
-	-moz-box-shadow:    0px 0px 80px 0px lightgreen;
-	box-shadow:         0px 0px 80px 0px lightgreen;
-   }      
-   div.eraldaja0 {
-	  width:25px;
-	  display:inline-block;
+       -webkit-box-shadow: 0px 0px 80px 0px lightgreen;
+       -moz-box-shadow: 0px 0px 80px 0px lightgreen;
+       box-shadow: 0px 0px 80px 0px lightgreen;
    }
-      div.eraldaja {
-	  width:20px;
-	  display:inline-block;
-   }      
+   div.eraldaja0 {
+       width: 25px;
+       display: inline-block;
+   }
+   div.eraldaja {
+       width: 20px;
+       display: inline-block;
+   }
    div.eraldaja2 {
-	  width:5px;
-	  display:inline-block;
+       width: 5px;
+       display: inline-block;
    }
    div.eelinfo.vale {
        background-color: salmon;
-	-webkit-box-shadow: 0px 0px 80px 0px red;
-	-moz-box-shadow:    0px 0px 80px 0px red;
-	box-shadow:         0px 0px 80px 0px red;
-   }   
+       -webkit-box-shadow: 0px 0px 80px 0px red;
+       -moz-box-shadow: 0px 0px 80px 0px red;
+       box-shadow: 0px 0px 80px 0px red;
+   }
    div.veeru_info {
        position: absolute;
        background-color: pink;
@@ -286,14 +316,10 @@
    div.rea_info {
        position: absolute;
        /*margin-left: 50px;*/
-	   /*left: 75%;*/
-	   left: calc(100% - 82px);
+       /*left: 75%;*/
+       
+       left: calc(100% - 110px);
        background-color: pink;
-   }   
-
-   div.eelinfo:hover {
-       z-index: 999;
-       background: aliceblue;
    }
    div.veeru_info:hover {
        z-index: 999;
@@ -305,84 +331,94 @@
    }
    div.sammuloendur {
        /*background-color: pink;*/
-       right:0;
-       top:33px;
-		z-index: 999;
-		
-		position: fixed;
-	 
+       
+       right: 0;
+       top: 33px;
+       z-index: 999;
+       position: fixed;
    }
-   
    div.kast {
        display: inline-block;
        /*background-color: orange;*/
        /*overflow: hidden;*/
        /*float: left;*/
+       
        vertical-align: middle;
        position: relative;
    }
-   
-   div.kast.aktiivne table{
-   
-	-webkit-box-shadow: 0px 0px 80px 0px orange;
-	-moz-box-shadow:    0px 0px 80px 0px orange;
-	box-shadow:         0px 0px 80px 0px orange;
+   div.kast.aktiivne table {
+       -webkit-box-shadow: 0px 0px 80px 0px orange;
+       -moz-box-shadow: 0px 0px 80px 0px orange;
+       box-shadow: 0px 0px 80px 0px orange;
    }
-   div.kast.passiivne table{
-   
-	-webkit-box-shadow: 0px 0px 80px 0px gray;
-	-moz-box-shadow:    0px 0px 80px 0px gray;
-	box-shadow:         0px 0px 80px 0px gray;
+   div.kast.passiivne table {
+       -webkit-box-shadow: 0px 0px 80px 0px gray;
+       -moz-box-shadow: 0px 0px 80px 0px gray;
+       box-shadow: 0px 0px 80px 0px gray;
    }
-      div.kast.õpi table{
-   
-	-webkit-box-shadow: 0px 0px 80px 0px aqua;
-	-moz-box-shadow:    0px 0px 80px 0px aqua;
-	box-shadow:         0px 0px 80px 0px aqua;
+   div.kast.õpi table {
+       -webkit-box-shadow: 0px 0px 80px 0px aqua;
+       -moz-box-shadow: 0px 0px 80px 0px aqua;
+       box-shadow: 0px 0px 80px 0px aqua;
    }
-   div.kast.õige table{
-   
-	-webkit-box-shadow: 0px 0px 80px 0px lightgreen;
-	-moz-box-shadow:    0px 0px 80px 0px lightgreen;
-	box-shadow:         0px 0px 80px 0px lightgreen;
+   div.kast.õige table {
+       -webkit-box-shadow: 0px 0px 80px 0px lightgreen;
+       -moz-box-shadow: 0px 0px 80px 0px lightgreen;
+       box-shadow: 0px 0px 80px 0px lightgreen;
    }
-   div.kast.vale table{
-   
-	-webkit-box-shadow: 0px 0px 80px 0px red;
-	-moz-box-shadow:    0px 0px 80px 0px red;
-	box-shadow:         0px 0px 80px 0px red;
+   div.kast.vale table {
+       -webkit-box-shadow: 0px 0px 80px 0px red;
+       -moz-box-shadow: 0px 0px 80px 0px red;
+       box-shadow: 0px 0px 80px 0px red;
    }
    
-   div.kast.aktiivne {
-      /* background-color: orange;*/
-   }     
-    div.kast.passiivne {
-      /* background-color: gray;*/
-   }      
-   div.kast.passiivne järelinfo {
-   
-       background-color: teal;
-   }  
-   div.kast.õige {
-       /*background-color: lightgreen;*/
-   }  
-   div.kast.vale {
-       /*background-color: salmon;*/
-   }  
-   
-   
-   		div.rippmenüü_hoidija {
-			display: inline-block;
-			}
-			
-	div.rippmenüü {
-			top: 37px;
-			width: 355px;
-			background-color: black;
-			position: absolute;
-			opacity:0.65;
+   /* internet exploreri trikk */
+	@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+	   div.kast.aktiivne {
+		   background-color: wheat;
+	   }
+	   div.kast.passiivne {
+		   background-color: gray;
+	   }
+
+	   div.kast.õige {
+		   background-color: lightgreen;
+	   }
+	   div.kast.vale {
+		   background-color: salmon;
+	   }
+	   div.kast.õpi {
+			background-color: aqua;
+		}
 	}
    
+   div.kast.aktiivne {
+	   /* background-color: orange;*/
+   }
+   div.kast.passiivne {
+	   /* background-color: gray;*/
+   }
+
+   div.kast.õige {
+	   /*background-color: lightgreen;*/
+   }
+   div.kast.vale {
+	   /*background-color: salmon;*/
+   }
+   div.kast.passiivne järelinfo {
+       background-color: teal;
+   }
+   div.rippmenüü_hoidija {
+       display: inline-block;
+   }
+   
+   div.rippmenüü {
+       top: 37px;
+       width: 355px;
+       background-color: black;
+       position: absolute;
+       opacity: 0.65;
+   }
    div.kast_avaleht {
        display: inline-block;
        /*overflow: hidden;*/
@@ -402,17 +438,14 @@
        /*width:80%;*/
        
        margin-top: 40px;
-       margin-right: 80px;
+       margin-right: 110px;
        margin-left: 60px;
        margin-bottom: 40px;
    }
-   
-      div.maatriksi_konteiner.lvs {
-
+   div.maatriksi_konteiner.lvs {
        margin-right: 140px;
        /*margin-left: 140px;*/
    }
-   
    div.maatriksi_konteiner_avaleht {
        float: left;
        /*width:80%;*/
@@ -427,6 +460,6 @@
    }
    div.kastide_organisaator_avaleht.viited {
        font-size: 15px;
-	   padding-left: 5px;
-	   padding-right: 5px;
+       padding-left: 5px;
+       padding-right: 5px;
    }
