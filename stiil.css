@@ -147,6 +147,19 @@ body {
        margin-right: auto;
        display: none;
    }
+   
+   div.murd_lugeja_ja_nimetaja_ja_segaarv {
+	   vertical-align: middle;   
+	   display: inline-block;
+   }   
+   div.murd_lugeja_ja_nimetaja {
+       float: right;
+	   font-size: 16px;
+   }
+   div.murd_lugeja {
+       border-bottom: solid 1px;
+   }
+   
    div.tööriistariba_parem {
        font-size: 20px;
        /*background-color: pink;*/

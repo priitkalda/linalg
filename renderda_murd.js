@@ -10,7 +10,7 @@ var printMurd = function(murrusõne, kasSulud){
 		
 		var ava = "";
 		var sulge = "";
-		var tulem = "<div style=\"  vertical-align: middle;   display: inline-block;\">";
+		var tulem = '<div class="murd_lugeja_ja_nimetaja_ja_segaarv">';
 		/*
 		if (murrusõne.indexOf(" ") >= 0 ){
 			
@@ -25,7 +25,7 @@ var printMurd = function(murrusõne, kasSulud){
 		}*/
 		
    
-		return ava + tulem + "<div style=\"    float: right;font-size: 16px;\"><div style=\"    border-bottom: solid 1px;\">" 
+		return ava + tulem + '<div class="murd_lugeja_ja_nimetaja"><div class="murd_lugeja">'
 		+ murrusõne.split("/")[0] + "</div><div>"+ murrusõne.split("/")[1] +"</div></div></div>" + sulge;
 
 	}else{

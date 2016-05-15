@@ -1,0 +1,61 @@
+body {
+       margin: 0;
+       padding: 0;
+       font-family: Arial;
+       font-size: 15px;
+   }
+   
+       div.tööriistariba {
+           display: none;
+       }
+   div.hetke_kordinaadid {
+           display: none;
+   }
+   div.teatekeskus {
+           display: none;
+   }
+   
+   
+   div.murd_lugeja_ja_nimetaja {
+	   font-size: 8px;
+   }
+   
+   
+      div.maatriksi_konteiner {
+	  
+       margin-top: 20px;
+       margin-right: 80px;
+       margin-left: 40px;
+       margin-bottom: 20px;
+   }
+   
+      div.veeru_info {
+       margin-top: -20px;
+   }
+   div.rea_info {
+       
+       left: calc(100% - 80px);
+   }   
+   
+   div.eelinfo {
+       right: calc(100% - 40px);
+       transform: translateY(-50%);
+   }
+   
+   
+     table {
+       table-layout: fixed;
+       border-collapse: collapse;
+	   border-radius: 7px; 
+	   border-left: 1px solid #999; 
+	   border-right: 1px solid #999; 
+	   xborder-collapse: collapse;
+	   
+   }
+   table td {
+       padding: 5px;
+   }
+   table td > div {
+       min-width: 20px;
+       height: 20px;
+   }

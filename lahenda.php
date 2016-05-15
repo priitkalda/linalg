@@ -54,7 +54,7 @@
         <title><?php echo "Ülesanne ".$_GET['ülesanne']; ?></title>
         <META name="Priit Kalda" content="Name">
 		<link rel="stylesheet" type="text/css" href="stiil.css">
-
+        <link rel="stylesheet" type="text/css" media="print" href="print.css">
 		<!-- lae kohalikud koopiad javascriptidest, kui pilves olevad pole saadaval -->
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.1.0/math.min.js"></script>
 		<script>
