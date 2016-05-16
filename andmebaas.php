@@ -8,9 +8,11 @@ function ühenda(){
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
+	$andmebaas = "maatriksid";
+
 
 	try {
-		$conn = new PDO("mysql:host=$servername;dbname=maatriksid", $username, $password);
+		$conn = new PDO("mysql:host=$servername;dbname=$andmebaas", $username, $password);
 		$conn->exec("SET CHARACTER SET utf8");
 
 		// set the PDO error mode to exception
