@@ -34,7 +34,7 @@
 
 		$tulem = $tulem . "]]";
 		
-		$a = [$tulem, $tüüp, $sammud];
+		$a = array($tulem, $tüüp, $sammud);
 	}else{
 		include_once('viga.html');
 		die();

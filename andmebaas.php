@@ -4,7 +4,7 @@ $conn;
 
 function ühenda(){
 	global $conn;
-	
+
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
@@ -41,8 +41,8 @@ $conn = null;
 function kontrolli_vastust($vastus, $id){
 	ühenda();
 	global $conn;
-	$stmt = $conn->prepare("SELECT tüüp,vastus FROM ülesanne WHERE id=" . $id . ";");
-	$stmt->execute();
+	$stmt = $conn->prepare("SELECT tüüp,vastus FROM ülesanne WHERE id= :id");
+	$stmt->execute(array('id' => $id) );	
 	$stmt->setFetchMode(PDO::FETCH_ASSOC);
 	$result = $stmt->fetchAll();
 	
@@ -128,8 +128,12 @@ function renderda_ülesande_link($sql_rida){
 function ülesanne($id){
 	ühenda();
 	global $conn;
-	$stmt = $conn->prepare("SELECT sisu, tüüp, sammud FROM ülesanne WHERE id=" . $id . ";");
-	$stmt->execute();
+	//$stmt = $conn->prepare("SELECT sisu, tüüp, sammud FROM ülesanne WHERE id=" . $id . ";");
+	//$stmt->execute();
+	
+	$stmt = $conn->prepare('SELECT sisu, tüüp, sammud FROM ülesanne WHERE id= :id');
+	$stmt->execute(array('id' => $id) );	
+	
 	$stmt->setFetchMode(PDO::FETCH_ASSOC);
 	$result = $stmt->fetchAll();
 	$conn = null;
@@ -147,8 +151,8 @@ function kõik_ülesanded(){
 	
 	foreach($result as $r) {
 		echo '<b>' . $r['kirjeldus'] . '</b><br><div class="kastide_organisaator_avaleht">';
-		$stmt = $conn->prepare("SELECT id, sisu, allikas FROM ülesanne WHERE tüüp=" . $r['id']." and peida_kataloogist!=1");
-		$stmt->execute();
+		$stmt = $conn->prepare("SELECT id, sisu, allikas FROM ülesanne WHERE tüüp= :id and peida_kataloogist!=1");
+		$stmt->execute(array('id' => $r['id'] ) );	
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
 		$result = $stmt->fetchAll();
 		$i = 0;
@@ -176,7 +180,8 @@ function viited($vajalikud){
 		global $conn;	
 		
 
-		$stmt = $conn->prepare("SELECT * FROM viited WHERE id=".implode(" or id=",$vajalikud));
+		$stmt = $conn->prepare("SELECT * FROM viited WHERE id= :id");
+		$stmt->execute(array('id' => implode(" or id=",$vajalikud)) );	
 
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -197,12 +202,14 @@ function viited($vajalikud){
 function ülesanded($tp, $lk){
 	ühenda();
 	global $conn;
-	$stmt = $conn->prepare("SELECT * FROM tüüp WHERE id=" . $tp);
+	$stmt = $conn->prepare("SELECT * FROM tüüp WHERE id= :tp");
+	$stmt->execute(array('tp' => $tp) );	
 	$stmt->execute();
 	$stmt->setFetchMode(PDO::FETCH_ASSOC);
 	$r = $stmt->fetchAll();
 	
-	$stmt = $conn->prepare("SELECT id,sisu,allikas FROM ülesanne WHERE tüüp=" . $tp." and peida_kataloogist!=1");
+	$stmt = $conn->prepare("SELECT id,sisu,allikas FROM ülesanne WHERE tüüp=:tp and peida_kataloogist!=1");
+	$stmt->execute(array('tp' => $tp) );	
 	$stmt->execute();
 	$stmt->setFetchMode(PDO::FETCH_ASSOC);
 	$result = $stmt->fetchAll();

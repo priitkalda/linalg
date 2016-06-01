@@ -32,7 +32,7 @@
 
 	 
 		<?php
-			$vajalikud = [];
+			$vajalikud = array();
 			include_once 'andmebaas.php';
 			
 			if (isset($_GET['tüüp'])){
