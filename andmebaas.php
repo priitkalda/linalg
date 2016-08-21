@@ -28,6 +28,7 @@ function ühenda(){
 	}
 };
 
+// kui pole php myadminiga ligipääsu, siis saab selle ajutiselt sisse kommenteerida ja avada selle lehe, siis kirjutatakse andmebaas üle uue versiooniga
 /*
 if ($fh = fopen($_SERVER['DOCUMENT_ROOT']."/maatriksid.sql", "r")) {
 $loetud = fread($fh,filesize($_SERVER['DOCUMENT_ROOT']."/maatriksid.sql"));
@@ -38,6 +39,8 @@ $stmt = $conn->prepare($loetud);
 $stmt->execute();
 $conn = null;
 */
+
+// serveripoolne vastuse kontroll
 function kontrolli_vastust($vastus, $id){
 	ühenda();
 	global $conn;
@@ -53,7 +56,9 @@ function kontrolli_vastust($vastus, $id){
 		echo 'N';
 		//include_once('kontroll_lvs.php');
 		
-	}	
+	}
+	
+    // kliendi pool otsustab tagasisaadud ühe või nulli põhjal, kas vastus on õige
 	else if ($result[0]['vastus']  == null){
 		echo 'N';
 	}
@@ -81,6 +86,7 @@ function kontrolli_vastust($vastus, $id){
 	global $conn;
 }
 
+// joonistab (echo'b) ekraanile maatriksi ja lingi sellele, nagu on avalehel 
 function renderda_ülesande_link($sql_rida){
 			
 	global $vajalikud;	
@@ -124,7 +130,7 @@ function renderda_ülesande_link($sql_rida){
 	echo $tulem;
 }
 		
-		
+// toob selle id-ga ülesande
 function ülesanne($id){
 	ühenda();
 	global $conn;
@@ -141,6 +147,7 @@ function ülesanne($id){
 
 };
 
+// avalehe moodustamine
 function kõik_ülesanded(){
 	ühenda();
 	global $conn;
@@ -173,7 +180,7 @@ function kõik_ülesanded(){
 	$conn = null;
 };
 
-
+// ülesannete algallikate loetelu
 function viited($vajalikud){	
 	if (count($vajalikud) >0 ){
 		ühenda();
@@ -198,7 +205,7 @@ function viited($vajalikud){
 	}
 };
 
-
+// ülesannete kataloogi sirvimise lehekülg
 function ülesanded($tp, $lk){
 	ühenda();
 	global $conn;

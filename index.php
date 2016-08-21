@@ -50,7 +50,7 @@
 				
 			}
 			else{
-				// avaleht
+				// avaleht, url-i sees pole midagi
 				include_once 'tutvustus.html';
 				echo kõik_ülesanded();
 			}

@@ -36,10 +36,13 @@
 		
 		$a = array($tulem, $tüüp, $sammud);
 	}else{
+		// 404 (sellise id-ga ülesannet baasis pole)
 		include_once('viga.html');
 		die();
 	}
 	
+	// loeb tekstfaili (javascripti koodiga) ja kirjutab selle lehe kliendi poolel valmiva lehe lähtekoodi. 
+	// tehtud selleks et eri ülesande tüüpide jaoks erinevat funktsionaalsust käivitada
 	function ava_js ($nimi){
 		if ($fh = fopen($nimi, "r")) {
 			return fread($fh,filesize($nimi));
@@ -59,25 +62,32 @@
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.1.0/math.min.js"></script>
 		<script>
 		if (typeof math == 'undefined') {
+			// kohalik varukoopia
 			document.write(unescape("%3Cscript src='math.min.js' type='text/javascript'%3E%3C/script%3E"));
 		}
 		</script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script>
 		if (typeof jQuery == 'undefined') {
+			// kohalik varukoopia
 			document.write(unescape("%3Cscript src='jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
 		}
 		</script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/sylvester/0.1.3/sylvester.js"></script>
 		<script>
 		if (typeof Matrix == 'undefined') {
+			// kohalik varukoopia
 			document.write(unescape("%3Cscript src='sylvester.js' type='text/javascript'%3E%3C/script%3E"));
 		}
 		</script>
 		<script src="renderda_murd.js"></script>
 		<script>
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// põhiprogramm algab siit
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TODO eraldi .js faili
 
-// põhiprogramm
+// programmi seisundi muutujad
 var kasVeerud = false;
 var kasVahetada = false;
 var kasSama = false;
@@ -141,6 +151,8 @@ var teated = {
 "desync_klient1_serv0" : "Kuidagiviisi leiab teie arvuti, et teie vastus on õige, kuid meie andmete põhjal on teie vastus vale.",
 "desync_klient0_serv1" : "Väga tubli. Meie andmetel on teie vastus õige.",
 "lvs_esit_pooleli" : "Teil on lahendite esitamine pooleli. Kui te olete ümber mõelnud, vajutage tagasi.",
+"valige_sihtrida" : "Valige rida millele liita. Valides sama rea, korrutatakse seda rida arvuga.",
+"valige_sihtveerg" : "Valige veerg millele liita. Valides sama veeru, korrutatakse seda veergu arvuga.",
 }
 
 var sisend_v2li = '<input type="text" name="kordaja" id="kordaja" class="sisend_väli_kordaja" value="">';
@@ -167,28 +179,34 @@ var teata = function(mitmessõne){
 
 var võta_samm_tagasi = function(){
 	kordaja_hetk = 1;
-	// kui pole algseisus
 	teata();
 	kasOotan = false;
 	tagasi = true;
 	lukk = false;
 	vajadus_õppida = false;
+	// kui pole algseisus (lahenduskäigus peab olema vähemalt kaks maatriksit)
 	if(ad.length>1){
 		samme_hetk--;
 		värskenda_sammuloendurit();
 		kasLvs_esitamine = false;
 		
+		// tsükleid on vaja, AINULT sellepärast  et determinandi arendamisel tekib ühe sammuga rohkem kui 1 maatriks.
+		// tagasivõtmisel on vaja need kõik ära võtta. muul juhul tehakse kõike 1 korras
+		
+		
+		// visuaalne
 		for (var i = ad[ad.length-2]; i > 0 ; i-- ){
 			rakenda_hiire_sündmused(a.length-i-ad[ad.length-1]);
-			//$('#kast_'+ (	a.length-i-ad[ad.length-1]) ).css("background-color","orange");
 			$('#kast_'+ (	a.length-i-ad[ad.length-1]) ).attr("class", "kast aktiivne");
 			$('#kast_'+ (	a.length-i-ad[ad.length-1]) ).show();
 		}
 		
+		// eemalda ekraanilt
 		for (var i = ad[ad.length-1]; i > 0 ; i-- ){
 			$('#kast_'+(	a.length-i  ) ).remove();
 		}
 		
+		// kustuta muutujatest
 		for (var i = ad[ad.length-1]; i > 0 ; i-- ){
 			a.pop();
 			ak.pop();
@@ -199,7 +217,7 @@ var võta_samm_tagasi = function(){
 
 
 
-	
+// joonistab maatriksi muutujatest ekraanile	
 var renderda_maatriks = function(mitmes){
 	
 	if (mitmes == undefined){
@@ -208,13 +226,16 @@ var renderda_maatriks = function(mitmes){
 	
 	aktiivne = aktiivne+1;
 	
+	// juurelement mille külge lähevad kõik ühe maatrikis osad
 	var kast = document.createElement('div');
 	
+	// maatriksist paremal vertikaalselt keskel olev lahter (näiteks võrdusmärgi jaoks)
 	var vaheinfo = document.createElement('div');
     vaheinfo.setAttribute('class', 'järelinfo');
     vaheinfo.setAttribute('id', 'järelinfo_'+(mitmes));
 	vaheinfo.textContent = "->";
 	
+	// maatriksist vasakul vertikaalselt keskel olev lahter (näiteks eesoleva kordaja jaoks)
 	var vaheinfo2 = document.createElement('div');
 	
 	if( 1== <?php echo $a[1] ?> && a[mitmes].length==0  ){
@@ -224,8 +245,9 @@ var renderda_maatriks = function(mitmes){
 	}
     vaheinfo2.setAttribute('id', 'eelinfo_'+(mitmes));
 	
-	// ülesande tüüp on determiant
+	// ülesande tüüp on 1 (determinant)
 	if( 1== <?php echo $a[1] ?>   ){
+		// ette kordaja taha võrdusmärl
 		vaheinfo.textContent = "=";
 		var korrutusmärk = "";
 		if (a[mitmes].length > 0){
@@ -235,21 +257,23 @@ var renderda_maatriks = function(mitmes){
 		if (ak[mitmes].compare(1) !=0 || (a[mitmes].length <= 0 )  )  {
 			vaheinfo2.innerHTML =  printMurd(ak[mitmes].toFraction(false), true)+korrutusmärk;
 		}
-		// ülesande tüüp on astak
+		// ülesande tüüp on 4 (astak)
 	}else if(4== <?php echo $a[1] ?> ){
-		
+		// ette tekst rank taha võrdusmärk
 		vaheinfo.textContent = "=";
 		vaheinfo2.textContent =  "rank";
 	}
 	
 	kast.appendChild(vaheinfo2);
 	
+	// maatriksi tabelit hoidev kast
 	var matDiv = document.createElement('div');
     matDiv.setAttribute('class', 'maatriksi_konteiner');
     matDiv.setAttribute('id', 'maatriks_'+(mitmes));
     kast.setAttribute('class', 'kast aktiivne');
     kast.setAttribute('id', 'kast_'+(mitmes));
 	
+	// maatriksi tabel
 	var tbl = document.createElement('table');
     tbl.setAttribute('id', 'maatriksi_tabel_'+(mitmes));
 	// ülesande tüüp on determiant
@@ -261,24 +285,30 @@ var renderda_maatriks = function(mitmes){
 	
     var tbdy = document.createElement('tbody');
 	
-	
+	// loeme maatiksis olevad numbrid listist a kohal mitmes
+		// käime läbi maatriksi veerud
 	for (var j = 0; j< a[mitmes].length; j++){
 		
         var tr = document.createElement('tr');
 		
+		// ja read
 		for (var jj = 0; jj< a[mitmes][j].length; jj++){
 			
             var td = document.createElement('td'); 
 			td.setAttribute('id', 'maatriksi_sisu');
 			var tabeli_sisu_div = document.createElement('div');
 			
+			// metalahtrid sisaldavad maatriksiga tehtud teisenduste kirjeldusi. Näiteks +2*V2 jne.
+			// need on seotud maatriksi tabeli kõige ülemise rea lahtritega ja kõige parempoolsemate lahtritega
 			if(jj == (a[mitmes][j].length-1)){
+				// ülemine rida
 				var metalahter_div = document.createElement('div');
 				metalahter_div.setAttribute('id', 'rea_info_'+(mitmes+1)+j);
 				metalahter_div.setAttribute('class', 'rea_info');
 				tabeli_sisu_div.appendChild(metalahter_div);
 			}
 			if(j==0){
+				//parempoolne veerg
 				var metalahter_div = document.createElement('div');
 				metalahter_div.setAttribute('id', 'veeru_info'+(mitmes)+jj);
 				metalahter_div.setAttribute('class', 'veeru_info');
@@ -286,16 +316,17 @@ var renderda_maatriks = function(mitmes){
 			}
 											// ülesande tüüp on pöördmaatriks
 			if(jj == a[mitmes].length && 2== <?php echo $a[1] ?>){
+				// joonistame keskele joone
 				td.setAttribute('style', 'border-left: 2px solid #000;');
 			}
 												// ülesande tüüp on lineaarvõrrandisüsteem
 			if(jj == a[mitmes][j].length-2 && 3== <?php echo $a[1] ?>){
+				// joonistame enne viimast tulpa joone
 				td.setAttribute('style', 'border-right: 2px solid #000;');
 			}
 
-			//var node = document.createTextNode(   a[mitmes][j][jj].toFraction(false)  ) ;
+			// kujutame murru visuaalselt ilusalt
 			tabeli_sisu_div.innerHTML +=( printMurd(  a[mitmes][j][jj].toFraction(false)  ) );
-			//tabeli_sisu_div.appendChild(node);
 			
 			td.appendChild(tabeli_sisu_div);
 			tr.appendChild(td);
@@ -316,16 +347,19 @@ var renderda_maatriks = function(mitmes){
 	
 	document.getElementById('keha').appendChild(kast);
 	
-	//document.getElementById('keha').appendChild(vaheinfo);
 	rakenda_hiire_sündmused(mitmes);
 
 };	
 
+// sammuloendur üleval paremal nurgas
 var värskenda_sammuloendurit = function(){
 	$('#sammuloendur').empty();
 	$('#sammuloendur').append(samme_hetk + '/' + samme);
 };
 
+// joonistab enamast ühe maatriksi ekraanile. AINULT siis kui on tegemist determinandi ülesandega ja 
+// kasutatud on determinandi arendamist, on vaja teha mitu maatriksit korraga
+// teeb ka vanad maatriksid mittevajutatavaks
 var renderda_aktiivsed_maatriksid = function(mitmes){
 	
 	kordaja_hetk = 1;
@@ -334,11 +368,13 @@ var renderda_aktiivsed_maatriksid = function(mitmes){
 	värskenda_sammuloendurit();
 	for (var i = ad[ad.length-1]; i > 0 ; i-- ){
 		
+		// joonista maatriks
 		renderda_maatriks(a.length-i);	
-		//console.log(mitmes);
+		
 		// õpiprogramm
 								// ülesande tüüp on determiant
 		if((aktiivne-1)==(mitmes) && 1== <?php echo $a[1] ?> && vajadus_õppida){
+			// pane programm lukku ja lase kasutajal ise arvutada kordaja
 			lukk = true;
 			vajadus_õppida = false;
 			teata("õpi_juhis");
@@ -350,14 +386,13 @@ var renderda_aktiivsed_maatriksid = function(mitmes){
 			$('#õpi').focus();
 			
 			$('#õpi').keypress(function(e) {
-				if (e.which == 13) {
-					//console.log("enter");
+				if (e.which == 13) { // enter
 						try{ 
+				            // kontrolli
 							if (  math.fraction( $('#õpi').val()).compare( ak[mitmes] )==0  ){
 								lukk = false;
 								$('#kast_'+(mitmes) ).attr("class", "kast aktiivne");
 								console.log($('#õpi').val() + ", "+ ak[mitmes]);
-								//$('#õpi').remove();
 								$('#eelinfo_'+(mitmes) ).empty();
 								$('#eelinfo_'+(mitmes) ).append(printMurd(ak[mitmes].toFraction(), true) + "*");
 								teata("õige");
@@ -375,7 +410,7 @@ var renderda_aktiivsed_maatriksid = function(mitmes){
 			});
 			
 		}		
-		
+		// vahepeale pluss märgid, kui on arendatud determinanti
 		if ((a.length-i) != (a.length-1)){
 			$('#järelinfo_'+(aktiivne-1) ).empty();
 			$('#järelinfo_'+(aktiivne-1) ).append("+");
@@ -383,17 +418,18 @@ var renderda_aktiivsed_maatriksid = function(mitmes){
 		
 	}
 
+	// eelmised maatriksid mittevajutatavaks ja taust värvida hallikaks
 	for (var i = ad[ad.length-2]; i > 0 ; i-- ){
 		
 		$('#maatriksi_tabel_'+ (a.length - i - ad[ad.length-1]) +' td').unbind('click');
 		$('#maatriksi_tabel_'+ (a.length - i - ad[ad.length-1]) +' td').unbind('mouseenter mouseleave');
 		$('#eelinfo_'+ (a.length - i - ad[ad.length-1])).unbind('click');
-		//$('#kast_'+ (a.length - i - ad[ad.length-1]) ).css("background-color","gray");
 		$('#kast_'+ (a.length - i - ad[ad.length-1]) ).attr("class", "kast passiivne");
 	}
 }
 
 // teeb koopia aktiivsetest maatriksitest, et siis koopiat muuta. Eelmine säilitatakse, et saaks sammu tagasi võtta
+// TEEB MUUTUSED AINULT MUUTUJATESSE, EKRAANILE MIDAGI EI JOONISTA
 var klooni = function(){
 
 	tempa = [];
@@ -429,12 +465,7 @@ var eemalda_nullid = function(){
 	
 	for (var i = ad[ad.length-1]; i > 0 ; i-- ){
 		
-		//$('#kast_' + (ak.length-i)).css("background-color", "red");
-		//$('#kast_' + (ak.length-i)).fadeOut(1000);
-		//$('#kast_' + (ak.length-i)).hide();
-		
 		if( ak[ak.length-i]!=0 
-		//|| eemalda_adst > ad[ad.length-1]-2 		
 		){
 			temp = [];
 			for (var j = 0; j< a[a.length-i].length; j++){
@@ -469,19 +500,17 @@ var eemalda_nullid = function(){
 		
 		//peidame vanad ekraanilt
 		for (var i = ad[ad.length-1]; i > 0 ; i-- ){
-			//$('#kast_' + (ak.length-i)).css("background-color", "red");
-			//$('#kast_' + (ak.length-i)).fadeOut(1000);
 			$('#kast_' + (ak.length-i)).hide();
 		}
 		
-		// erijuht, kui kõik on nullid
+		// erijuht, kui kõik on nullid, et siis kohe vastus esitataks
 		if(ad[ad.length-1]-eemalda_adst==0){
 			a.push([]);
 			ak.push(math.fraction(0));
 			ad.push(1);
 			
 		}else{
-			// muudel juhtudel
+			// muudel juhtudel, kui on vaja üks või rohkem maatriks alles jätta
 			for (var j = 0; j< tempa.length; j++){
 				a.push(tempa[j].slice());
 				ak.push(tempak[j].clone());
@@ -489,7 +518,7 @@ var eemalda_nullid = function(){
 			ad.push(ad[ad.length-1]-eemalda_adst);			
 		}
 		
-
+		// joonistame uued ekraanile
 		renderda_aktiivsed_maatriksid();
 		
 		// kas on vaja vastust kontrollida
@@ -505,6 +534,7 @@ var eemalda_nullid = function(){
 		<?php
 		
 		//vastuse automaatkontrolli testimise abi. Teeb muutuja alg kättesaadavaks brauseri konsoolis.
+		// kommenteerida välja mugavamaks debugimiseks
 		/*
 		if ($a[1]==1){
 			echo '
@@ -665,10 +695,6 @@ var kontrolli_vastust = function(üks){
 
 // rakenda hiire üle lohistamise sündmused just renderdatud maatriksitele
 var rakenda_hiire_sündmused = function(mitmes){
-
-	//$('td').unbind('click');
-	//$('td').unbind('mouseenter mouseleave')
-
 	
 	
 	if (mitmes == undefined){
@@ -1122,19 +1148,11 @@ var hiirekliki_tegevus = function(aktiivne){
 				
 				if (!kasVahetada){
 					var väärtus = $('#kordaja').val();
-					// var regex_email = /^\d*[0-9](|.\d*[0-9]| \d*[0-9])?$/;
 					
 					if( math.fraction(0).compare( math.fraction(väärtus  )) ==0){
 						teata("0");
 						throw new erind_vale_sisend("Arv_null");
 					}
-					
-					// else if ( regex_email.test(väärtus)  ){
-						// console.log("jah");
-					// }else{
-						// console.log("ei");
-						// throw new erind_vale_sisend("Ei");
-					// }
 					
 					var kordaja = math.fraction($('#kordaja').val());
 				}
@@ -1261,8 +1279,14 @@ var hiirekliki_tegevus = function(aktiivne){
 			// jäta meeldi esimesena klõpsatud veerg või rida
 			if(kasVeerud == true){		
 				liidetav = t;
+				if(!kasVahetada){
+					teata("valige_sihtveerg");
+				}
 			}else{
 				liidetav = s;
+				if(!kasVahetada){
+					teata("valige_sihtrida");
+				}
 			}
 			
 			
@@ -1272,7 +1296,7 @@ var hiirekliki_tegevus = function(aktiivne){
 
 $('#maatriksi_tabel_'+(aktiivne-1)+' td').click(
 	function(e) {
-		// kas on pooleli kasutaja poolt mingi kordaja üle küsimine
+		// kas on pooleli kasutaja poolt mingi kordaja üle küsimine. Kui on, siis ära luba kasutajal midagi klõpsimise peale teha
 		if (!lukk){
 			//console.log("e.target.className: "+e.target.className+", this: "+this);
 			if (e.target.className == "rea_info" || e.target.className == "veeru_info"|| e.target.className == "sisend_väli_kordaja"  ){
@@ -1371,6 +1395,7 @@ var pöördmaatriksi_kontrollimine = function(kasutaja_arvates_pööratav){
 	}
 }
 
+// lahter maatriksist vasakul pikemaks, et pikk vastus ära mahuks
 var vormista_eelinfo_sõnaliseks_vastuseks = function(sõna){
 		$('#eelinfo_' + (a.length-1)).css("right","0");
 		$('#järelinfo_' + (a.length-1)).css("left","170px");
@@ -1378,15 +1403,18 @@ var vormista_eelinfo_sõnaliseks_vastuseks = function(sõna){
 		$('#eelinfo_' + (a.length-1)).append(sõna);
 }
 
+// kaotab maatriksi osa ära, et vastus (maatriksist vasakul asuv paneel) paremini ära mahuks
 var vormista_kast_arvuliseks_vastuseks = function(milline){
 	$('#järelinfo_' + milline).css("transform", "translateY(100%)");
 	$('#eelinfo_' + milline).css("left", "0");
 	$('#eelinfo_' + milline).css("right", "initial");
 }
 
+// lahendaja teatab, et lahendid puuduvad
 var lvs_lah_puuduvad = function(){
 	if(!kasLvs_esitamine){
 		kasLvs_esitamine = true;
+		// tühi samm, et tagasi võtmisel ei kaoks lahenduse viimane samm ära
 		a.push([[]]);
 		ak.push(math.fraction(0));
 		ad.push(1);

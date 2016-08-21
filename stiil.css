@@ -128,7 +128,7 @@ body {
        position: fixed;
        /* margin-bottom: 040px; */
        
-       transform: translateY(-100%);
+       transform: translateY(-160%);
        width: 100%;
        z-index: 1000;
        height: 27px;
@@ -442,7 +442,7 @@ body {
    div.keha {
        /*background-color: aqua;*/
        
-       margin-top: 37px;
+       margin-top: 60px;
        /* position: fixed; */
        /* position: relative; */
    }

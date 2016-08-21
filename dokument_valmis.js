@@ -1,18 +1,7 @@
+// kohustuslikud tegevused
+
 $(document).ready(function() {
-
-    // keset ekraani näidatavas div-is avanev kasutusjuhend
-    /*
-    $("#nupp_abi_1").click(function() {
-    	$('#abi_1').toggle();
-    		
-    	if($('#abi_1').is(':visible')){
-    		$('#nupp_abi_1').prop('value', 'Sulge Kasutusjuhend');
-    	}else{
-    		$('#nupp_abi_1').prop('value', 'Kasutusjuhend');
-    	}	
-    });
-    */
-
+     
     $("#laiuse_soovitus").click(function() {
         $('#laiuse_soovitus').hide();
     });
@@ -21,10 +10,10 @@ $(document).ready(function() {
         teata();
     });
 
+    // tööriistariba nuppude kuulajad
     $("#nupp_lvs_esitamine").click(function() {
         $('#rippmenüü_2').toggle();
     });
-
 
 
     $("#nupp_lvs_0").click(function() {
